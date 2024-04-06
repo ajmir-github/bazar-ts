@@ -2,13 +2,10 @@ import { Router } from "express";
 
 const authRouter = Router();
 
-const getList: GetHandler<{ userId: string }> = (request, response) => {
-  request.cache.auth;
-  request.params.userId;
-
-  response.send({ errors: [], data: {} });
-};
-
-authRouter.get("asd", getList);
+// POST api/auth/sign-in
+// POST api/auth/sign-up  (if not user create root)
+// POST api/auth/change-password
+// POST api/auth/change-email
+// POST api/auth/change-role (if root user)
 
 export default authRouter;
