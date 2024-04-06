@@ -1,0 +1,111 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  Root
+  Admin
+  User
+}
+
+enum Rating {
+  Good
+  Bad
+  Netural
+}
+
+enum Status {
+  New
+  Old
+  Used
+}
+
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
+  password String
+  salt     String
+  profile  Profile?
+  role     Role     @default(User)
+}
+
+model Profile {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  image       String?
+  email       String?
+  phone       String?
+  whatsup     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  pinnedItems Item[]    @relation("pinnedItems")
+  items       Item[]    @relation("writtenItems")
+  comments    Comment[]
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @unique @db.ObjectId // relation 
+
+  views   Int    @default(0)
+  state   State  @relation(fields: [stateId], references: [id])
+  stateId String @db.ObjectId
+
+  @@index([name])
+}
+
+model Item {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String
+  price         Float
+  status        Status
+  previousPrice Float?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  soldAt        DateTime?
+  sold          Boolean   @default(false)
+  images        String[]  @default([])
+  views         Int       @default(0)
+  comments      Comment[]
+  profile       Profile?  @relation("writtenItems", fields: [profileId], references: [id])
+  profileId     String?   @db.ObjectId
+  state         State     @relation(fields: [stateId], references: [id])
+  stateId       String    @db.ObjectId
+  category      Category  @relation(fields: [categoryId], references: [id])
+  categoryId    String    @db.ObjectId
+  pinnedBys     Profile?  @relation("pinnedItems", fields: [pinnedByIds], references: [id])
+  pinnedByIds   String?   @db.ObjectId
+
+  @@index([status, price, views, sold])
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment   String
+  rating    Rating
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items     Item     @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
+  author    Profile  @relation(fields: [authorId], references: [id])
+  authorId  String   @db.ObjectId
+}
+
+model State {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  Profile Profile[]
+  items   Item[]
+}
+
+model Category {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  image String?
+  Item  Item[]
+}
