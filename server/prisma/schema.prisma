@@ -25,20 +25,14 @@ enum Status {
   Used
 }
 
-model Auth {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  email    String  @unique
-  password String
-  verified Boolean @default(false)
-  user     User?
-  role     Role    @default(User)
-}
-
 model User {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  email       String    @unique
+  password    String
+  verified    Boolean   @default(false)
+  role        Role      @default(User)
   name        String
   image       String?
-  email       String?
   phone       String?
   whatsup     String?
   createdAt   DateTime  @default(now())
@@ -46,8 +40,6 @@ model User {
   pinnedItems Item[]    @relation("pinnedItems")
   items       Item[]    @relation("writtenItems")
   comments    Comment[]
-  auth        Auth      @relation(fields: [authId], references: [id])
-  authId      String    @unique @db.ObjectId // relation 
   views       Int       @default(0)
   state       State     @relation(fields: [stateId], references: [id])
   stateId     String    @db.ObjectId
