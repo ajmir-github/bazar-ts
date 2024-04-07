@@ -25,6 +25,7 @@ declare global {
       cache: {
         item?: Item;
         auth?: User;
+        user?: User;
         profile?: Profile;
         comment?: Comment;
         state?: State;
