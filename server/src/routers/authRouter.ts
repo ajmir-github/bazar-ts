@@ -32,8 +32,8 @@ authRouter.post(
 );
 
 // ---------------------------------------- only the owner users
-// POST api/auth/self
-authRouter.post(
+// PATCH api/auth/self
+authRouter.patch(
   "/self/",
   Validate({ body: userInputValidator.pick({ email: true, password: true }) }),
   Autheticate(true),
@@ -42,8 +42,8 @@ authRouter.post(
 );
 
 // ---------------------------------------- root user only
-// POST api/auth/:userId
-authRouter.post(
+// PATCH api/auth/:userId
+authRouter.patch(
   "/:userId",
   Validate({
     body: userInputValidator.pick({

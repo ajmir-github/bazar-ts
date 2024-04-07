@@ -76,33 +76,29 @@ export const signUpController: PostHandler<{
   });
 };
 
-// ---------------------------------------- only the owner users
-// POST api/auth/self
+// ----------------------------------------
 export const updateUserController: PostHandler<{
   email?: string;
   password?: string;
 }> = async (request, response) => {
-  if (!request.cache.user)
+  if (!request.cache.auth)
     throw new Error(
-      "changeSelfPassword controller requires request.cache.user!"
+      "changeSelfPassword controller requires request.cache.auth!"
     );
-  const userId = request.params.id || request.cache.auth?.id;
-  const { password, email } = request.body;
-  database.user.update({
+  const userId = request.params.id || request.cache.auth.id;
+  // update user
+  const user = await database.user.update({
     where: {
       id: userId,
     },
-    data: {
-      password,
-      email,
-    },
+    data: request.body,
   });
+  // done
   response.json({
     data: {
-      message: "User updated!",
+      id: user.id,
+      email: user.email,
+      role: user.role,
     },
   });
 };
-
-// ---------------------------------------- root user only
-// POST api/auth/:userid
