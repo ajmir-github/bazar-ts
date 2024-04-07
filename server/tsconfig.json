@@ -7,9 +7,9 @@
     "target": "es6",
     "outDir": "./dist",
     "baseUrl": "./src",
-    "paths": {
-      "@/*": ["./*"]
-    },
+    // "paths": {
+    //   "@/*": ["./*"]
+    // },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "strict": true,
