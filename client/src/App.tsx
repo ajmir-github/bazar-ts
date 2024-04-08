@@ -4,7 +4,10 @@ import { TRPCClientError } from "@trpc/client";
 
 async function main() {
   try {
-    const res = await Server.log.query("as");
+    const res = await Server.auth.signIn.query({
+      email: "asda",
+      password: "asda",
+    });
     console.log(res);
   } catch (error: any) {
     if (error instanceof TRPCClientError) {

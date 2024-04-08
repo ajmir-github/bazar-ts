@@ -1,7 +1,9 @@
-import { router, privateProcedure } from "../trpc";
+import { router, procedure } from "../trpc";
 
-export const userRouter = router({
-  getUsers: privateProcedure.query(({ ctx }) => {
+const userRouter = router({
+  getUsers: procedure.query(({ ctx }) => {
     return [1, 2, 3];
   }),
 });
+
+export default userRouter;
